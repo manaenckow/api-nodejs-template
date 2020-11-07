@@ -1,0 +1,8 @@
+{
+ "servToken": "",
+ "secret": "",
+ "mysqlUser": "",
+ "mysqlPass": "",
+ "mysqlDB": "",
+ "donateKey": ""
+}
