@@ -1,4 +1,6 @@
 const {secret} = require('../config.json');
+const qs = require('querystring');
+const crypto = require('crypto');
 
 const sign = (e, res) => {
     let URL_PARAMS = e ? e.split('?')[1] : [];

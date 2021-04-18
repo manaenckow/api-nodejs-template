@@ -2,9 +2,6 @@
 const express = require("express");
 const app = express();
 const mysql = require('mysql2');
-const axios = require('axios');
-const qs = require('querystring');
-const crypto = require('crypto');
 
 // Configs
 const mysqlConfig = require('./mysqlConfig.json')

@@ -1,4 +1,5 @@
 const {servToken} = require('../config.json');
+const axios = require('axios');
 
 const api = async (method, params, token = servToken) => {
     const res = await axios({
