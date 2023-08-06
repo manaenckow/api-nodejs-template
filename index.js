@@ -1,7 +1,9 @@
 // Mpdules
 const express = require("express");
 const app = express();
-const mysql = require('mysql2');
+const mysql2 = require('mysql2');
+const dotenv = require('dotenv');
+dotenv.config();
 
 // Configs
 const mysqlConfig = require('./mysqlConfig.json')
@@ -20,27 +22,28 @@ const listener = app.listen(3435, () => {
     console.log("Your app is listening on port " + listener.address().port);
 });
 
-const connection = mysql.createConnection(mysqlConfig);
+global.mysql2 = mysql2.createConnection(mysqlConfig);
 
-app.use((err, req, res) => {
-    res.status(500).send('internal error');
+app.use((req, res, error, next) => {
+    res.send('internal error');
 });
 
-app.use((req, res, next) => {
-    if (req.method !== 'OPTIONS' && !['/api/app/callBack', '/api/app/alice25323'].includes(req.url)) {
-        sign(req, res, next);
+app.use(async (req, res, next) => {
+    if (
+        req.method !== 'OPTIONS'
+        && !['/api/asb/getCloniumBannerInfo', '/api/asb/callBack', '/api/asb/alice25323', '/api/asb/getClonServer'].includes(req.url)
+    ) {
+        await sign(req, res, next);
+        next();
+    } else {
+        next();
     }
-    next();
 });
 
-app.get("/api/test/getUser", (req, res) => {
-    getUser(req, res, connection, api);
-});
+app.get("/api/test/getUser", getUser);
 
 
-app.post("/api/test/post", (req, res) => {
-   
-});
+app.post("/api/test/post", testPost);
 
 const random = (min, max) => {
     return Math.floor(Math.random() * (max - min + 1)) + min;

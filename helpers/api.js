@@ -1,7 +1,6 @@
-const {servToken} = require('../config.json');
 const axios = require('axios');
 
-const api = async (method, params, token = servToken) => {
+const api = async (method, params, token = process.env.APP_TOKEN) => {
     const res = await axios({
         method: 'POST',
         url: `https://api.vk.com/method/${method}?access_token=${token}&v=5.122`,
