@@ -1,17 +1,12 @@
 const axios = require('axios');
-const config = require('../../configs/config.json');
 const qs = require('querystring');
 const crypto = require('crypto');
 const secure = require("crypto-js");
 
-const {secret, secretWeb} = config;
-
-const sign = (req, res, next, connection) => {
+const sign = (req, res, next) => {
     const auth_data = req.get('x-vk');
 
-    // if (!auth_data && !req.query.code) {
-    //     return res.redirect('https://vk.com/kino');
-    // }
+    const secret = process.env.APP_SECRET;
 
     let URL_PARAMS = auth_data ? auth_data.split('?')[1] : [];
     if (URL_PARAMS && URL_PARAMS.includes('#')) {

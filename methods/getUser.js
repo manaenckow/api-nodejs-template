@@ -1,8 +1,8 @@
-const getUser = async (req, res, pool, api, user, ref) => {
+const getUser = async (req, res, api) => {
 
-    const connection = pool.promise();
+    const user = req.signedUser;
 
-    const [user_data] = await connection.query('SELECT * FROM users WHERE vk_id = ?', [user]);
+    const [user_data] = await mysql.query('SELECT * FROM users WHERE vk_id = ?', [user]);
 
     if (!user_data[0]) {
         const {first_name, last_name, photo_200} = (await api('users.get', {
@@ -26,7 +26,7 @@ const getUser = async (req, res, pool, api, user, ref) => {
             ref_photo_200 = refUserData.photo_200;
         }
 
-        connection.query(
+        const [insert_user] = await mysql.query(
             'INSERT INTO users (vk_id, name, photo_200, owner_name, owner_vk_id, owner_photo, is_infected) ' +
             'VALUES (?, ?, ?, ?, ?, ?, ?)',
             [
@@ -37,21 +37,20 @@ const getUser = async (req, res, pool, api, user, ref) => {
                 ref_vk_id || 0,
                 ref_photo_200,
                 ref_vk_id ? 1 : 0
-            ], (e, r) => {
-                let response = {
-                    coins: 10,
-                    is_infected: ref_vk_id ? 1 : 0,
-                    virus_instance: 1,
-                    owner_name: ref_name,
-                    owner_vk_id: ref_vk_id || 0,
-                    owner_photo_200: ref_photo_200,
-                    vk_id: user,
-                    heals: 0,
-                    vip: 0
-                };
+            ]);
+            let response = {
+                coins: 10,
+                is_infected: ref_vk_id ? 1 : 0,
+                virus_instance: 1,
+                owner_name: ref_name,
+                owner_vk_id: ref_vk_id || 0,
+                owner_photo_200: ref_photo_200,
+                vk_id: user,
+                heals: 0,
+                vip: 0
+            };
 
-                res.send(e || response);
-            });
+            res.send(insert_user.affectedRows ? response : {success: false});
     } else {
         res.send(user_data[0]);
     }
