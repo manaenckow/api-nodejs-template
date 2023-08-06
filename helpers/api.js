@@ -11,5 +11,5 @@ const api = async (method, params, token = process.env.APP_TOKEN) => {
     }
     return res.data.response;
 }
-
+global.api = api;
 module.exports = api;

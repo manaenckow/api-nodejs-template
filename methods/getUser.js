@@ -1,5 +1,4 @@
-const getUser = async (req, res, api) => {
-
+const getUser = async (req, res) => {
     const user = req.signedUser;
 
     const [user_data] = await mysql.query('SELECT * FROM users WHERE vk_id = ?', [user]);
