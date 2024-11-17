@@ -28,20 +28,9 @@ app.use((req, res, error, next) => {
     res.send('internal error');
 });
 
-app.use(async (req, res, next) => {
-    if (
-        req.method !== 'OPTIONS'
-        && !['/api/asb/getCloniumBannerInfo', '/api/asb/callBack', '/api/asb/alice25323', '/api/asb/getClonServer'].includes(req.url)
-    ) {
-        await sign(req, res, next);
-        next();
-    } else {
-        next();
-    }
-});
+app.use(sign);
 
 app.get("/api/test/getUser", getUser);
-
 
 app.post("/api/test/post", testPost);
 
